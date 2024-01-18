@@ -25,15 +25,6 @@ class Hashmap
     grow_hashmap if max_load <= size
   end
 
-  def grow_hashmap
-    all_entries = entries
-    new_hashmap_size = @hashmap.length * 2
-    clear(new_hashmap_size)
-    all_entries.each do |name, value|
-      set(name, value)
-    end
-  end
-
   def keys
     keys_or_values('keys')
   end
@@ -104,6 +95,7 @@ class Hashmap
   end
 
   def set(name, value)
+    load_factor
     new_node = Node.new(name, value)
     hashed_name = hash(name)
     bucket_number = modulo(hashed_name)
@@ -162,67 +154,20 @@ class Hashmap
     string.each_char { |letter| number += letter.ord }
     number
   end
+
+  def grow_hashmap
+    all_entries = entries
+    new_hashmap_size = @hashmap.length * 2
+    clear(new_hashmap_size)
+    all_entries.each do |name, value|
+      set(name, value)
+    end
+  end
 end
 
 if $PROGRAM_NAME == __FILE__
 
-  test = Hashmap.new
-  test.set('a', '01')
-  test.set('b', '02')
-  test.set('c', '03')
-  test.set('d', '04')
-  test.set('e', '05')
-  test.set('f', '06')
-  test.set('g', '07')
-  test.set('h', '08')
-  test.set('i', '09')
-  test.set('j', '10')
-  test.set('k', '11')
-  test.set('l', '12')
-  test.set('m', '13')
-  test.set('n', '14')
-  test.set('o', '15')
-  test.set('p', '16')
-  test.set('q', '17')
-  test.set('r', '18')
-  test.set('s', '19')
-  test.set('t', '20')
-  test.set('u', '21')
-  test.set('v', '22')
-  test.set('w', '23')
-  test.set('x', '24')
-  test.set('y', '25')
-  test.set('z', '26')
-
-  p get_test = test.get('a')
-  p get_test.name
-
-  key_test = test.key?('r')
-  p key_test
-
-  p test.key?('g')
-  remove_test = test.remove('gg')
-  p test.key?('g')
-  p remove_test
-
-  p test.length
-
-  test.clear
-  p test
-  p test.length
-
-  test_keys = test.keys
-  p test_keys
-  p test_keys.sort
-
-  test_values = test.values
-  p test_values
-  p test_values.sort
-
-  test_entries = test.entries
-  puts test_entries
-  test_entries.each_with_index do |element, index|
-    puts "#{element[0]} - #{element[1]}"
-  end
+  my_hashmap = Hashmap.new
+  p my_hashmap.hashmap.length
 
 end
